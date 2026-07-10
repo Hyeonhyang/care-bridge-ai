@@ -45,20 +45,47 @@ def calculate_risk_score(vitals: dict) -> dict:
             details.append(f"호흡수 위험: {rr}회/분 (≥25) +3")
 
     # ── 2. 산소포화도 SpO2 ────────────────────────────────────
+    # Scale 1: 산소 투여 없는 환자
+    # Scale 2: 산소 투여 중인 환자 (on_oxygen=True)
     spo2 = vitals.get("spo2")
+    on_oxygen = vitals.get("on_oxygen", False)
     if spo2 is not None:
         spo2 = float(spo2)
-        if spo2 <= 91:
-            score += 3
-            details.append(f"SpO2 위험: {spo2}% (≤91) +3")
-        elif spo2 <= 93:
-            score += 2
-            details.append(f"SpO2 주의: {spo2}% (92-93) +2")
-        elif spo2 <= 95:
-            score += 1
-            details.append(f"SpO2 경계: {spo2}% (94-95) +1")
+        if on_oxygen:
+            # Scale 2 (산소 투여 중)
+            if spo2 <= 83:
+                score += 3
+                details.append(f"SpO2 위험(O2투여): {spo2}% (≤83) +3")
+            elif spo2 <= 85:
+                score += 2
+                details.append(f"SpO2 주의(O2투여): {spo2}% (84-85) +2")
+            elif spo2 <= 87:
+                score += 1
+                details.append(f"SpO2 경계(O2투여): {spo2}% (86-87) +1")
+            elif spo2 <= 92:
+                pass  # 정상 (88-92, 0점)
+            elif spo2 <= 94:
+                score += 1
+                details.append(f"SpO2 경계(O2투여): {spo2}% (93-94) +1")
+            elif spo2 <= 96:
+                score += 2
+                details.append(f"SpO2 주의(O2투여): {spo2}% (95-96) +2")
+            else:
+                score += 3
+                details.append(f"SpO2 위험(O2투여): {spo2}% (≥97) +3")
         else:
-            pass  # 정상 (96%+, 0점)
+            # Scale 1 (산소 투여 없음)
+            if spo2 <= 91:
+                score += 3
+                details.append(f"SpO2 위험: {spo2}% (≤91) +3")
+            elif spo2 <= 93:
+                score += 2
+                details.append(f"SpO2 주의: {spo2}% (92-93) +2")
+            elif spo2 <= 95:
+                score += 1
+                details.append(f"SpO2 경계: {spo2}% (94-95) +1")
+            else:
+                pass  # 정상 (≥96, 0점)
 
     # ── 3. 수축기 혈압 (Systolic BP) ─────────────────────────
     sbp = vitals.get("systolic_bp")
@@ -99,7 +126,7 @@ def calculate_risk_score(vitals: dict) -> dict:
             details.append(f"빈맥 주의: {hr}bpm (111-130) +2")
         else:
             score += 3
-            details.append(f"빈맥 위험: {hr}bpm (>130) +3")
+            details.append(f"빈맥 위험: {hr}bpm (≥131) +3")
 
     # ── 5. 체온 (Temperature) ─────────────────────────────────
     temp = vitals.get("temperature")
@@ -118,7 +145,7 @@ def calculate_risk_score(vitals: dict) -> dict:
             details.append(f"발열 경계: {temp}°C (38.1-39.0) +1")
         else:
             score += 2
-            details.append(f"고열 주의: {temp}°C (>39.0) +2")
+            details.append(f"고열 주의: {temp}°C (≥39.1) +2")
 
     # ── 6. 의식수준 (ACVPU) ──────────────────────────────────
     # Alert / Confused / Voice / Pain / Unresponsive

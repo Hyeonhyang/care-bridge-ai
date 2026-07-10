@@ -41,11 +41,36 @@ async def get_patient_risk(
 
 
 @router.get("/patients")
-async def get_patients(user: dict = Depends(get_current_user)):
-    """담당 환자 목록을 조회합니다."""
+def get_patients(user: dict = Depends(get_current_user)):
+    """담당 환자 목록을 위험도 포함해서 조회합니다."""
     supabase = get_supabase()
     result = supabase.table("patients").select("*").execute()
-    return {"patients": result.data}
+    patients = result.data or []
+
+    if not patients:
+        return {"patients": []}
+
+    # 각 환자의 최신 활력징후로 위험도 계산
+    for patient in patients:
+        vitals_result = (
+            supabase.table("vital_signs")
+            .select("*")
+            .eq("patient_id", patient["id"])
+            .order("recorded_at", desc=True)
+            .limit(1)
+            .execute()
+        )
+        if vitals_result.data:
+            risk_data = calculate_risk_score(vitals_result.data[0])
+            patient["risk_level"] = risk_data["level"]
+            patient["risk_score"] = risk_data["score"]
+            patient["risk_details"] = risk_data["details"]
+        else:
+            patient["risk_level"] = "low"
+            patient["risk_score"] = 0
+            patient["risk_details"] = []
+
+    return {"patients": patients}
 
 
 @router.post("/patients")

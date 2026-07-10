@@ -43,8 +43,31 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-500">로딩 중...</p>
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <div className="h-8 w-48 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-4 w-32 bg-gray-100 rounded animate-pulse mt-2"></div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 bg-white rounded-xl border p-6">
+            {[1,2,3].map(i => (
+              <div key={i} className="flex items-center justify-between p-4 border rounded-lg mb-3">
+                <div>
+                  <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-3 w-40 bg-gray-100 rounded animate-pulse mt-2"></div>
+                </div>
+                <div className="h-6 w-12 bg-gray-200 rounded-full animate-pulse"></div>
+              </div>
+            ))}
+          </div>
+          <div className="bg-white rounded-xl border p-6">
+            {[1,2,3,4].map(i => (
+              <div key={i} className="h-12 bg-gray-100 rounded-lg animate-pulse mb-2"></div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }

@@ -73,6 +73,26 @@ class TableQuery:
     def upsert(self, data: dict | list) -> "TableInsert":
         return TableInsert(self.base_url, self.headers, data, upsert=True)
 
+    def update(self, data: dict) -> "TableUpdate":
+        return TableUpdate(self.base_url, self.headers, data, self._params)
+
+
+class TableUpdate:
+    def __init__(self, url: str, headers: dict, data: dict, params: dict):
+        self.url = url
+        self.headers = headers
+        self.data = data
+        self.params = params
+
+    def eq(self, col: str, val: str) -> "TableUpdate":
+        self.params[col] = f"eq.{val}"
+        return self
+
+    def execute(self):
+        r = httpx.patch(self.url, headers=self.headers, json=self.data, params=self.params)
+        r.raise_for_status()
+        return _Result(r.json() if r.content else [])
+
 
 class TableInsert:
     def __init__(self, url: str, headers: dict, data: dict | list, upsert: bool = False):

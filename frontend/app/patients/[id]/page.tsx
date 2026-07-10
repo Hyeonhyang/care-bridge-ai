@@ -88,12 +88,16 @@ export default function PatientDetailPage() {
           {handoffs.map((h) => (
             <div
               key={h.id}
-              className="bg-white rounded-xl shadow-sm border p-6"
+              className="bg-white rounded-xl shadow-sm border p-6 cursor-pointer hover:border-indigo-300 transition"
+              onClick={() => router.push(`/handoff/${h.id}`)}
             >
-              <p className="text-xs text-gray-400 mb-3">
-                {new Date(h.created_at).toLocaleString("ko-KR")}
-              </p>
-              {h.sbar_summary && <SbarCard sbar={h.sbar_summary} />}
+              <div className="flex justify-between items-center mb-3">
+                <p className="text-xs text-gray-400">
+                  {new Date(h.created_at).toLocaleString("ko-KR")}
+                </p>
+                <span className="text-xs text-indigo-500 hover:underline">수정 →</span>
+              </div>
+              {h.sbar_summary && <SbarCard sbar={h.sbar_summary?.detailed || h.sbar_summary} />}
             </div>
           ))}
         </div>

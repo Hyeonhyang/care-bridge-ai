@@ -77,6 +77,12 @@ export default function DashboardPage() {
         </div>
         <div className="flex gap-2">
           <button
+            onClick={() => router.push("/usage")}
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm"
+          >
+            📊 사용량
+          </button>
+          <button
             onClick={() => router.push("/handoff")}
             className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
           >

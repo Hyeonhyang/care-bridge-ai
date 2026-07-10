@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
-from app.api import upload, summarize, risk, actions, auth, emr, parse
+from app.api import upload, summarize, risk, actions, auth, emr, parse, usage
 
 settings = get_settings()
 
@@ -28,6 +28,7 @@ app.include_router(risk.router, prefix="/api/v1", tags=["위험도"])
 app.include_router(actions.router, prefix="/api/v1", tags=["업무리스트"])
 app.include_router(emr.router, prefix="/api/v1", tags=["EMR"])
 app.include_router(parse.router, prefix="/api/v1", tags=["AI분류"])
+app.include_router(usage.router, prefix="/api/v1", tags=["사용량"])
 
 
 @app.get("/api/v1/health", tags=["헬스체크"])

@@ -19,4 +19,14 @@ async def transcribe_audio(audio_bytes: bytes, filename: str) -> str:
         )
         response.raise_for_status()
         result = response.json()
+        
+        # 사용량 로깅
+        from app.services.usage_logger import log_usage
+        log_usage(
+            service="openai",
+            model=settings.OPENAI_WHISPER_MODEL,
+            audio_seconds=len(audio_bytes) / 16000,  # 대략적 추정
+            endpoint="stt",
+        )
+        
         return result.get("text", "")

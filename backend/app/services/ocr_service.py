@@ -67,4 +67,15 @@ async def extract_text_from_image(image_bytes: bytes) -> str:
         response.raise_for_status()
         result = response.json()
 
+    # 사용량 로깅
+    from app.services.usage_logger import log_usage
+    usage = result.get("usage", {})
+    log_usage(
+        service="openai",
+        model=settings.OPENAI_MODEL,
+        input_tokens=usage.get("prompt_tokens", 0),
+        output_tokens=usage.get("completion_tokens", 0),
+        endpoint="image_analysis",
+    )
+
     return result["choices"][0]["message"]["content"]

@@ -85,6 +85,17 @@ async def generate_sbar_summary(
         result = response.json()
 
     content = result["choices"][0]["message"]["content"]
+    
+    # 사용량 로깅
+    from app.services.usage_logger import log_usage
+    usage = result.get("usage", {})
+    log_usage(
+        service="openai",
+        model=settings.OPENAI_MODEL,
+        input_tokens=usage.get("prompt_tokens", 0),
+        output_tokens=usage.get("completion_tokens", 0),
+        endpoint="summarize",
+    )
 
     # JSON 파싱 시도
     try:

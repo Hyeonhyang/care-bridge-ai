@@ -19,39 +19,33 @@ def get_action_list(user: dict = Depends(get_current_user)):
     if not patients:
         return {"actions": []}
 
-    patient_ids = [p["id"] for p in patients]
+    # 모든 활력징후 + 인수인계 한 번에 조회
+    all_vitals = (
+        supabase.table("vital_signs")
+        .select("*")
+        .order("recorded_at", desc=True)
+        .execute()
+    ).data or []
 
-    # 모든 환자의 최신 활력징후를 한 번에 조회
-    all_vitals = []
-    for pid in patient_ids:
-        v = (
-            supabase.table("vital_signs")
-            .select("*")
-            .eq("patient_id", pid)
-            .order("recorded_at", desc=True)
-            .limit(1)
-            .execute()
-        )
-        if v.data:
-            all_vitals.append(v.data[0])
+    all_handoffs = (
+        supabase.table("handoff_records")
+        .select("patient_id, sbar_summary, actions, risk_level")
+        .order("created_at", desc=True)
+        .execute()
+    ).data or []
 
-    vitals_map = {v["patient_id"]: v for v in all_vitals}
+    # 메모리에서 매핑
+    vitals_map = {}
+    for v in all_vitals:
+        pid = v["patient_id"]
+        if pid not in vitals_map:
+            vitals_map[pid] = v
 
-    # 최근 인수인계 한 번에 조회
-    all_handoffs = []
-    for pid in patient_ids:
-        h = (
-            supabase.table("handoff_records")
-            .select("patient_id, sbar_summary, actions, risk_level")
-            .eq("patient_id", pid)
-            .order("created_at", desc=True)
-            .limit(1)
-            .execute()
-        )
-        if h.data:
-            all_handoffs.append(h.data[0])
-
-    handoff_map = {h["patient_id"]: h for h in all_handoffs}
+    handoff_map = {}
+    for h in all_handoffs:
+        pid = h["patient_id"]
+        if pid not in handoff_map:
+            handoff_map[pid] = h
 
     patients_data = []
 

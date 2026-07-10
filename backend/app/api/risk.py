@@ -50,18 +50,27 @@ def get_patients(user: dict = Depends(get_current_user)):
     if not patients:
         return {"patients": []}
 
-    # 각 환자의 최신 활력징후로 위험도 계산
+    # 모든 활력징후를 한 번에 조회 (DB 왕복 1회)
+    all_vitals_result = (
+        supabase.table("vital_signs")
+        .select("*")
+        .order("recorded_at", desc=True)
+        .execute()
+    )
+    all_vitals = all_vitals_result.data or []
+
+    # patient_id 기준으로 최신 활력징후만 추출 (메모리에서 처리)
+    latest_vitals_map = {}
+    for v in all_vitals:
+        pid = v["patient_id"]
+        if pid not in latest_vitals_map:
+            latest_vitals_map[pid] = v
+
+    # 위험도 계산 (DB 조회 없이 메모리에서)
     for patient in patients:
-        vitals_result = (
-            supabase.table("vital_signs")
-            .select("*")
-            .eq("patient_id", patient["id"])
-            .order("recorded_at", desc=True)
-            .limit(1)
-            .execute()
-        )
-        if vitals_result.data:
-            risk_data = calculate_risk_score(vitals_result.data[0])
+        vitals = latest_vitals_map.get(patient["id"])
+        if vitals:
+            risk_data = calculate_risk_score(vitals)
             patient["risk_level"] = risk_data["level"]
             patient["risk_score"] = risk_data["score"]
             patient["risk_details"] = risk_data["details"]

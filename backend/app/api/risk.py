@@ -70,6 +70,13 @@ def get_patients(user: dict = Depends(get_current_user)):
             patient["risk_score"] = 0
             patient["risk_details"] = []
 
+    # 위험도 높은 순 → 병실 번호 순 정렬
+    RISK_ORDER = {"critical": 0, "high": 1, "medium": 2, "low": 3}
+    patients.sort(key=lambda p: (
+        RISK_ORDER.get(p.get("risk_level", "low"), 3),
+        p.get("room_number", "")
+    ))
+
     return {"patients": patients}
 
 

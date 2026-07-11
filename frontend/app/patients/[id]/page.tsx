@@ -155,12 +155,18 @@ export default function PatientDetailPage() {
             {emr.handoff_records?.length > 0 && (
               <div className="p-3 bg-indigo-50 rounded-lg">
                 <h3 className="font-medium text-indigo-700 mb-1">최근 인수인계 요약</h3>
-                {emr.handoff_records.slice(0, 2).map((h: any, i: number) => (
-                  <div key={i} className="mb-2">
-                    <p className="text-xs text-gray-400">{new Date(h.created_at).toLocaleString("ko-KR")}</p>
-                    <p className="text-gray-600"><strong>S:</strong> {h.sbar_summary?.detailed?.situation || h.sbar_summary?.situation}</p>
-                  </div>
-                ))}
+                {emr.handoff_records.slice(0, 2).map((h: any, i: number) => {
+                  const sbar = h.sbar_summary?.detailed || h.sbar_summary || {};
+                  return (
+                    <div key={i} className="mb-2 pb-2 border-b border-indigo-100 last:border-0">
+                      <p className="text-xs text-gray-400">{new Date(h.created_at).toLocaleString("ko-KR")}</p>
+                      <p className="text-gray-600"><strong>S:</strong> {sbar.situation || "-"}</p>
+                      <p className="text-gray-600"><strong>B:</strong> {sbar.background || "-"}</p>
+                      <p className="text-gray-600"><strong>A:</strong> {sbar.assessment || "-"}</p>
+                      <p className="text-gray-600"><strong>R:</strong> {sbar.recommendation || "-"}</p>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

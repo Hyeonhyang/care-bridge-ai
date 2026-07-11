@@ -6,9 +6,15 @@ import time
 
 router = APIRouter()
 
-# 캐시 (30초 TTL)
+# 캐시 (5초 TTL)
 _patients_cache = {"data": None, "expires": 0}
 CACHE_TTL = 5
+
+
+def invalidate_patients_cache():
+    """데이터 변경 시 캐시 강제 무효화"""
+    _patients_cache["data"] = None
+    _patients_cache["expires"] = 0
 
 
 def _get_patients_with_risk():
@@ -111,6 +117,7 @@ async def create_patient(
     """새 환자를 등록합니다."""
     supabase = get_supabase()
     result = supabase.table("patients").insert(patient).execute()
+    invalidate_patients_cache()
     return {"patient": result.data[0] if result.data else None}
 
 

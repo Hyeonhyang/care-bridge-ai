@@ -4,6 +4,7 @@ from app.core.security import get_current_user
 from app.core.supabase import get_supabase
 from app.services.stt_service import transcribe_audio
 from app.services.ocr_service import extract_text_from_image
+from app.api.risk import invalidate_patients_cache
 
 router = APIRouter()
 
@@ -100,5 +101,7 @@ async def upload_vitals(
         "patient_id": patient_id,
         **vitals_data,
     }).execute()
+
+    invalidate_patients_cache()
 
     return {"message": "활력징후가 저장되었습니다.", "patient_id": patient_id}

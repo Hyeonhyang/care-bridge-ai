@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Care-Bridge AI",
   description: "병동 간호사 인수인계 자동 요약 및 환자 위험도 스크리닝 시스템",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
 };
 
 export default function RootLayout({

@@ -75,7 +75,7 @@ export default function DashboardPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* 왼쪽 하단 고정 토글 */}
-      <div className="fixed bottom-6 left-6 bg-white rounded-xl shadow-lg border p-3 z-50">
+      <div className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 bg-white rounded-xl shadow-lg border p-2 sm:p-3 z-50">
         <div className="flex items-center gap-3">
           <span className={`text-xs font-medium ${mode === "junior" ? "text-indigo-600" : "text-gray-400"}`}>신규</span>
           <button
@@ -93,33 +93,33 @@ export default function DashboardPage() {
       </div>
 
       {/* 헤더 */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Care-Bridge AI</h1>
           <p className="text-gray-500">인수인계 대시보드 {mode === "junior" ? "(신규 모드)" : "(경력 모드)"}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => router.push("/usage")}
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm"
+            className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm"
           >
             📊 사용량
           </button>
           <button
             onClick={() => router.push("/handoff")}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            className="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm"
           >
             + 새 인수인계
           </button>
           <button
             onClick={() => router.push("/patients/new")}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+            className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm"
           >
             + 환자 등록
           </button>
           <button
             onClick={() => { localStorage.clear(); router.push("/login"); }}
-            className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-sm"
+            className="px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-sm"
           >
             로그아웃
           </button>

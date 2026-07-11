@@ -33,7 +33,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+      <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-md mx-4">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-indigo-700">Care-Bridge AI</h1>
           <p className="text-gray-500 mt-2">병동 인수인계 자동 요약 시스템</p>

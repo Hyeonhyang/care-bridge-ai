@@ -248,7 +248,7 @@ export default function HandoffPage() {
 
   // ==================== 입력 화면 ====================
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-3 sm:px-4 py-6 sm:py-8 pb-20">
       {/* 왼쪽 하단 고정 토글 */}
       <div className="fixed bottom-6 left-6 bg-white rounded-xl shadow-lg border p-3 z-50">
         <div className="flex items-center gap-3">

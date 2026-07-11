@@ -233,6 +233,11 @@ export default function HandoffPage() {
           <button onClick={() => router.push("/")} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
             대시보드로
           </button>
+          {result.record_id && (
+            <button onClick={() => router.push(`/handoff/${result.record_id}`)} className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">
+              ✏️ 수정하기
+            </button>
+          )}
           <button onClick={() => { setStep("input"); setResult(null); }} className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
             새 인수인계
           </button>

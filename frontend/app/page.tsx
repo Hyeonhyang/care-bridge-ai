@@ -117,6 +117,12 @@ export default function DashboardPage() {
           >
             + 환자 등록
           </button>
+          <button
+            onClick={() => { localStorage.clear(); router.push("/login"); }}
+            className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-sm"
+          >
+            로그아웃
+          </button>
         </div>
       </div>
 

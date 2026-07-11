@@ -10,10 +10,12 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: str = "http://localhost:3000"
 
-    # OpenAI API
+    # Groq API (STT)
+    GROQ_API_KEY: str = ""
+
+    # OpenAI API (LLM + Vision)
     OPENAI_API_KEY: str = ""
     OPENAI_MODEL: str = "gpt-4o-mini"
-    OPENAI_WHISPER_MODEL: str = "whisper-1"
 
     # Supabase
     SUPABASE_URL: str = ""

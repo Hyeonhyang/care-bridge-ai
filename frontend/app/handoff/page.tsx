@@ -399,10 +399,19 @@ export default function HandoffPage() {
                     return (
                       <div key={i} className="ml-2 mt-0.5">
                         <p className="text-gray-600">S:{sbar.situation || "-"}</p>
+                        <p className="text-gray-600">A:{sbar.assessment || "-"}</p>
                         <p className="text-gray-600">R:{sbar.recommendation || "-"}</p>
                       </div>
                     );
                   })}
+                </>
+              )}
+              {emrData.nursing_notes?.length > 0 && (
+                <>
+                  <p className="text-green-600 font-medium mt-1">간호 기록:</p>
+                  {emrData.nursing_notes.slice(0, 3).map((n: any, i: number) => (
+                    <p key={i} className="text-gray-600 ml-2">{n.note_content}</p>
+                  ))}
                 </>
               )}
             </div>

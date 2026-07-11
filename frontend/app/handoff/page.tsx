@@ -356,17 +356,19 @@ export default function HandoffPage() {
               {emrData.handoff_records?.length > 0 && (
                 <div className="p-3 bg-indigo-50 rounded-lg">
                   <h3 className="font-medium text-indigo-700 mb-1">최근 인수인계</h3>
-                  {emrData.handoff_records.map((h: any, i: number) => (
-                    <div key={i} className="mb-2 pb-2 border-b border-indigo-100 last:border-0">
-                      <p className="text-xs text-gray-400">{new Date(h.created_at).toLocaleString("ko-KR")}</p>
-                      {h.sbar_summary && (
+                  {emrData.handoff_records.map((h: any, i: number) => {
+                    const sbar = h.sbar_summary?.detailed || h.sbar_summary || {};
+                    return (
+                      <div key={i} className="mb-2 pb-2 border-b border-indigo-100 last:border-0">
+                        <p className="text-xs text-gray-400">{new Date(h.created_at).toLocaleString("ko-KR")}</p>
                         <div className="mt-1 text-gray-600">
-                          <p><strong>S:</strong> {h.sbar_summary.situation}</p>
-                          <p><strong>R:</strong> {h.sbar_summary.recommendation}</p>
+                          <p><strong>S:</strong> {sbar.situation || "-"}</p>
+                          <p><strong>A:</strong> {sbar.assessment || "-"}</p>
+                          <p><strong>R:</strong> {sbar.recommendation || "-"}</p>
                         </div>
-                      )}
-                    </div>
-                  ))}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -388,6 +390,9 @@ export default function HandoffPage() {
               {emrData.doctor_orders?.slice(0, 3).map((o: any, i: number) => (
                 <p key={i} className="text-gray-600">[{o.order_type}]{o.order_content}</p>
               ))}
+              {emrData.handoff_records?.length > 0 && (
+                <p className="text-indigo-600 mt-1">최근 인수인계: {emrData.handoff_records[0].sbar_summary?.compact?.situation || emrData.handoff_records[0].sbar_summary?.detailed?.situation || "-"}</p>
+              )}
             </div>
           </div>
         )}

@@ -63,7 +63,24 @@ export default function PatientDetailPage() {
               {patient?.room_number}호 · {patient?.diagnosis} · {patient?.age}세 {patient?.gender}
             </p>
           </div>
-          <RiskBadge level={risk?.level || "low"} />
+          <div className="flex items-center gap-2">
+            <RiskBadge level={risk?.level || "low"} />
+            <button
+              onClick={async () => {
+                if (!confirm(`${patient?.name} 환자를 삭제하시겠습니까?`)) return;
+                try {
+                  await apiRequest(`/api/v1/patients/${id}`, { method: "DELETE" });
+                  alert("삭제되었습니다.");
+                  router.push("/");
+                } catch (err: any) {
+                  alert("삭제 실패: " + err.message);
+                }
+              }}
+              className="px-3 py-1.5 text-xs text-red-500 border border-red-200 rounded-lg hover:bg-red-50"
+            >
+              삭제
+            </button>
+          </div>
         </div>
 
         {risk?.details?.length > 0 && (

@@ -121,6 +121,29 @@ async def create_patient(
     return {"patient": result.data[0] if result.data else None}
 
 
+@router.delete("/patients/{patient_id}")
+def delete_patient(
+    patient_id: str,
+    user: dict = Depends(get_current_user),
+):
+    """환자를 삭제합니다."""
+    supabase = get_supabase()
+    import httpx
+    from app.core.config import get_settings
+    settings = get_settings()
+    # CASCADE로 관련 데이터도 삭제됨
+    r = httpx.delete(
+        f"{settings.SUPABASE_URL}/rest/v1/patients?id=eq.{patient_id}",
+        headers={
+            "apikey": settings.SUPABASE_SERVICE_KEY,
+            "Authorization": f"Bearer {settings.SUPABASE_SERVICE_KEY}",
+        },
+        timeout=10,
+    )
+    invalidate_patients_cache()
+    return {"message": "환자가 삭제되었습니다."}
+
+
 @router.get("/patients/{patient_id}")
 async def get_patient_detail(
     patient_id: str,

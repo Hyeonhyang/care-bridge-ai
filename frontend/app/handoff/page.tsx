@@ -249,6 +249,20 @@ export default function HandoffPage() {
   // ==================== 입력 화면 ====================
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
+      {/* 왼쪽 하단 고정 토글 */}
+      <div className="fixed bottom-6 left-6 bg-white rounded-xl shadow-lg border p-3 z-50">
+        <div className="flex items-center gap-3">
+          <span className={`text-xs font-medium ${mode === "junior" ? "text-indigo-600" : "text-gray-400"}`}>신규</span>
+          <button
+            onClick={() => { const next = mode === "junior" ? "senior" : "junior"; setMode(next); localStorage.setItem("ux_mode", next); }}
+            className={`relative w-12 h-6 rounded-full transition-colors ${mode === "senior" ? "bg-indigo-600" : "bg-gray-300"}`}
+          >
+            <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${mode === "senior" ? "translate-x-6" : ""}`} />
+          </button>
+          <span className={`text-xs font-medium ${mode === "senior" ? "text-indigo-600" : "text-gray-400"}`}>경력</span>
+        </div>
+      </div>
+
       <h1 className="text-2xl font-bold mb-6">새 인수인계 작성</h1>
       <button
         onClick={() => router.push("/")}

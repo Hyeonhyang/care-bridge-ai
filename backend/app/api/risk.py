@@ -8,7 +8,7 @@ router = APIRouter()
 
 # 캐시 (30초 TTL)
 _patients_cache = {"data": None, "expires": 0}
-CACHE_TTL = 30
+CACHE_TTL = 5
 
 
 def _get_patients_with_risk():

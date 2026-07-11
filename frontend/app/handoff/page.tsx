@@ -363,6 +363,7 @@ export default function HandoffPage() {
                         <p className="text-xs text-gray-400">{new Date(h.created_at).toLocaleString("ko-KR")}</p>
                         <div className="mt-1 text-gray-600">
                           <p><strong>S:</strong> {sbar.situation || "-"}</p>
+                          <p><strong>B:</strong> {sbar.background || "-"}</p>
                           <p><strong>A:</strong> {sbar.assessment || "-"}</p>
                           <p><strong>R:</strong> {sbar.recommendation || "-"}</p>
                         </div>
@@ -391,7 +392,18 @@ export default function HandoffPage() {
                 <p key={i} className="text-gray-600">[{o.order_type}]{o.order_content}</p>
               ))}
               {emrData.handoff_records?.length > 0 && (
-                <p className="text-indigo-600 mt-1">최근 인수인계: {emrData.handoff_records[0].sbar_summary?.compact?.situation || emrData.handoff_records[0].sbar_summary?.detailed?.situation || "-"}</p>
+                <>
+                  <p className="text-indigo-600 font-medium mt-1">최근 인수인계:</p>
+                  {emrData.handoff_records.slice(0, 2).map((h: any, i: number) => {
+                    const sbar = h.sbar_summary?.compact || h.sbar_summary?.detailed || h.sbar_summary || {};
+                    return (
+                      <div key={i} className="ml-2 mt-0.5">
+                        <p className="text-gray-600">S:{sbar.situation || "-"}</p>
+                        <p className="text-gray-600">R:{sbar.recommendation || "-"}</p>
+                      </div>
+                    );
+                  })}
+                </>
               )}
             </div>
           </div>
